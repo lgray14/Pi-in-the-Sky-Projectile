@@ -3,10 +3,10 @@ Lucy Gray Pi in the Sky Project Engineering 4
 
 
 ## Table of Contents
-* [Planning](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#planning)
-* [CAD](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#cad)
-* [Code](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#code)
-* [Physical](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#physical)
+* [Planning](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#planning)
+* [CAD](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#cad)
+* [Code](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#code)
+* [Physical](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#physical)
 
 ### Planning
 
@@ -56,7 +56,7 @@ I expect this project will require:
   * Finished by April 1
 * Iteration and fixes
 
-[Back to Table of Contents](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#table-of-contents)
+[Back to Table of Contents](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#table-of-contents)
 
 ## CAD
 
@@ -76,16 +76,16 @@ I also designed a control box to store the electronics which will be able to arm
 
 *[Control Box CAD](https://cvilleschools.onshape.com/documents/8d3a5e693f3cf33ca7e5bdc1/w/83808f7c6e04da8df33e76c7/e/e94914d4094986ac800e3476?configuration=List_tYLpmbiOPNIlMj%3DDefault&renderMode=0&uiState=645e76f938eafd55bede0a2a)*
 
-[Back to Table of Contents](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#table-of-contents)
+[Back to Table of Contents](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#table-of-contents)
 
 ## Code
 *All code written in CircuitPython for Raspberry Pi Pico boards*
 
-[↓ Jump to final code and wiring ↓](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#final-code)
+[↓ Jump to final code and wiring ↓](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#final-code)
 
 ### Starting the code
 
-The first big issue I had to address was starting the data collection sequence of the projectile. I decided to try to communicate between two Pico boards to send a signal from one to the other to start and stop data collection using a button attached to the iniator board. I originally discovered [this library](https://github.com/kevinmcaleer/easy_comms), then realised it was written in MicroPython, making it incompatible with the CircuitPython I am using in the rest of the project. Since MicroPython and CircuitPython are quite similar in many regards, I tried to translate the library to CircuitPython, but it quickly became clear it would be easier to use code written in CircuitPython. Based on the Easy Comms library, I was able to narrow my search to a CircuitPython-based UART-reliant communication system, which I found [here](https://learn.adafruit.com/circuitpython-essentials/circuitpython-uart-serial). This example code was very useful to build a sending and receiving code operating over UART. [Here](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/code/uartTest.py) is the test code I wrote and am using to structure future comms.
+The first big issue I had to address was starting the data collection sequence of the projectile. I decided to try to communicate between two Pico boards to send a signal from one to the other to start and stop data collection using a button attached to the iniator board. I originally discovered [this library](https://github.com/kevinmcaleer/easy_comms), then realised it was written in MicroPython, making it incompatible with the CircuitPython I am using in the rest of the project. Since MicroPython and CircuitPython are quite similar in many regards, I tried to translate the library to CircuitPython, but it quickly became clear it would be easier to use code written in CircuitPython. Based on the Easy Comms library, I was able to narrow my search to a CircuitPython-based UART-reliant communication system, which I found [here](https://learn.adafruit.com/circuitpython-essentials/circuitpython-uart-serial). This example code was very useful to build a sending and receiving code operating over UART. [Here](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/code/uartTest.py) is the test code I wrote and am using to structure future comms.
 
 
 ### Adapting reading message into function library
@@ -221,7 +221,7 @@ if waitForMax:  # tell receiever the sender is ready
 
 ### Finding the time of flight
 
-Upon talking with Mr. Manning, I decided to include a timing function. My initial idea is to use time.monotonic() to measure the amount of time in a state of freefall between major accelerations. I briefly considered including a timer on the control box when this code was not working, but on debugging my initial code I realized it would work as I thought. The MPU accelerometer I'm using is calibrated so that freefall constitutes an acceleration of zero, so if the projectile knows it has not been launched (has not experienced freefall) that it should be looking for when it enters freefall to tell when it is launched. Once it knows it has been launched, it should be looking for when it experiences an acceleration from hitting the ground, which will be larger than the acceleration due to gravity (about 9.8 $m/s^2$ but usually between 8 and 11 in the accelerometer's readings). This allows what seems to be a fairly accurate time of flight, but I will probably need to test this code headless since dropping my circuit board from the table to a chair is not far enough to see whether or not the time value is consistent. Proof of concept code [here](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/code/accelTest.py).
+Upon talking with Mr. Manning, I decided to include a timing function. My initial idea is to use time.monotonic() to measure the amount of time in a state of freefall between major accelerations. I briefly considered including a timer on the control box when this code was not working, but on debugging my initial code I realized it would work as I thought. The MPU accelerometer I'm using is calibrated so that freefall constitutes an acceleration of zero, so if the projectile knows it has not been launched (has not experienced freefall) that it should be looking for when it enters freefall to tell when it is launched. Once it knows it has been launched, it should be looking for when it experiences an acceleration from hitting the ground, which will be larger than the acceleration due to gravity (about 9.8 $m/s^2$ but usually between 8 and 11 in the accelerometer's readings). This allows what seems to be a fairly accurate time of flight, but I will probably need to test this code headless since dropping my circuit board from the table to a chair is not far enough to see whether or not the time value is consistent. Proof of concept code [here](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/code/accelTest.py).
 
 ### Sending the time of flight to the board
 The last obstacle I had was combining the time of flight code with the main projectile code and sending it to the control box. When I combined the time of flight code with the code which collected altimeter values, I noticed that the acceleration values collected much slower than when the acceleration code is isolated. I realized that this is because the altimeter values collect quite slowly to get more accurate values. With Mr. Miller's help, I found [the GitHub for the MPL altimeter](https://github.com/adafruit/Adafruit_CircuitPython_MPL3115A2/blob/main/adafruit_mpl3115a2.py) and was able to adjust the speed with which the altimeter collects data by modifying the collection rate in the library at line 150 in the GitHub document. This done the acceleration collects a little faster, allowing me to test the combination of max height and time of flight transmission. Sending the data was fairly straight forward since I was able to modify the code I had already written to transmit the max height to include a section for the time of flight, as shown below.
@@ -320,9 +320,9 @@ if waitForData:  # tell receiever the sender is ready
 
 ### Final Code
 
-* [Function library](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/code/projectileLib.py)
-* [Code for control box](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/code/commsControl.py)
-* [Code for projectile](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/code/commsProjectile.py)
+* [Function library](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/code/projectileLib.py)
+* [Code for control box](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/code/commsControl.py)
+* [Code for projectile](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/code/commsProjectile.py)
 
 ### Wiring Diagram
 
@@ -359,7 +359,7 @@ PROJECTILE
 </tr>
 </table>
 
-[Back to Table of Contents](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#table-of-contents)
+[Back to Table of Contents](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#table-of-contents)
 
 ## Physical
 
@@ -408,4 +408,4 @@ Once I was able to get the minor issues out of the way, I was able to do a coupl
 
 Unfortunately this video was taken after the altimeter drift started affecting my max height values but the whole system is working except for the erroneous maximum height reading. Overall, I'm pleased with the final product and proud that I was able to accomplish quite a complicated system in just a little over a semester (despite intense senioritis). 
 
-[Back to Table of Contents](https://github.com/lgray14/Pi-in-the-Sky_Projectile/blob/main/README.md#table-of-contents)
+[Back to Table of Contents](https://github.com/lgray14/Pi-in-the-Sky-Projectile/blob/main/README.md#table-of-contents)
